@@ -1,0 +1,192 @@
+# Bank-Management-system-task
+This is bank management system for the crime access like third party access without users permission 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bank Management System</h1>
+
+        <div class="form-section">
+            <h2>Create Account</h2>
+            <input type="text" id="username" placeholder="Enter Name">
+            <button onclick="createAccount()">Create Account</button>
+        </div>
+
+        <div class="form-section">
+            <h2>Deposit Money</h2>
+            <input type="number" id="depositAmount" placeholder="Enter Amount">
+            <button onclick="depositMoney()">Deposit</button>
+        </div>
+
+        <div class="form-section">
+            <h2>Withdraw Money</h2>
+            <input type="number" id="withdrawAmount" placeholder="Enter Amount">
+            <button onclick="withdrawMoney()">Withdraw</button>
+        </div>
+
+        <div class="form-section">
+            <h2>Fund Transfer</h2>
+            <input type="text" id="transferTo" placeholder="Enter Recipient Name">
+            <input type="number" id="transferAmount" placeholder="Enter Amount">
+            <button onclick="transferMoney()">Transfer</button>
+        </div>
+
+        <div class="form-section">
+            <h2>Account Balance</h2>
+            <p id="balance">0</p>
+        </div>
+
+        <div class="form-section">
+            <h2>Transaction History</h2>
+            <ul id="transactions"></ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    text-align: center;
+}
+
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: #333;
+}
+
+.form-section {
+    margin: 20px 0;
+}
+
+input {
+    padding: 10px;
+    width: 70%;
+    margin: 5px 0;
+}
+
+button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#transactions {
+    list-style: none;
+    padding-left: 0;
+}
+
+#transactions li {
+    text-align: left;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
+let balance = 0;
+let transactions = [];
+let accountName = "";
+
+// Create account
+function createAccount() {
+    const username = document.getElementById("username").value;
+    if (username === "") {
+        alert("Please enter a name");
+        return;
+    }
+    accountName = username;
+    balance = 0;
+    transactions = [];
+    updateBalance();
+    updateTransactions();
+    alert(`Account created successfully for ${accountName}`);
+}
+
+// Deposit money
+function depositMoney() {
+    const amount = parseFloat(document.getElementById("depositAmount").value);
+    if (!amount || amount <= 0) {
+        alert("Enter a valid amount");
+        return;
+    }
+    balance += amount;
+    transactions.push(`Deposited ₹${amount}`);
+    updateBalance();
+    updateTransactions();
+}
+
+// Withdraw money
+function withdrawMoney() {
+    const amount = parseFloat(document.getElementById("withdrawAmount").value);
+    if (!amount || amount <= 0) {
+        alert("Enter a valid amount");
+        return;
+    }
+    if (amount > balance) {
+        alert("Insufficient balance");
+        return;
+    }
+    balance -= amount;
+    transactions.push(`Withdrew ₹${amount}`);
+    updateBalance();
+    updateTransactions();
+}
+
+// Fund transfer
+function transferMoney() {
+    const recipient = document.getElementById("transferTo").value;
+    const amount = parseFloat(document.getElementById("transferAmount").value);
+    if (recipient === "") {
+        alert("Enter recipient name");
+        return;
+    }
+    if (!amount || amount <= 0) {
+        alert("Enter a valid amount");
+        return;
+    }
+    if (amount > balance) {
+        alert("Insufficient balance");
+        return;
+    }
+    balance -= amount;
+    transactions.push(`Transferred ₹${amount} to ${recipient}`);
+    updateBalance();
+    updateTransactions();
+}
+
+// Update balance display
+function updateBalance() {
+    document.getElementById("balance").innerText = balance;
+}
+
+// Update transaction history
+function updateTransactions() {
+    const list = document.getElementById("transactions");
+    list.innerHTML = "";
+    transactions.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        list.appendChild(li);
+    });
+}
